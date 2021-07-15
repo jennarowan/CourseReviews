@@ -1,0 +1,1 @@
+print("The average rating for this course is " + str(data[(data["Timestamp"] >= datetime(2020, 7, 1, tzinfo = utc)) & (data["Timestamp"] <= datetime(2020, 12, 31, tzinfo = utc))]["Rating"].mean()))
