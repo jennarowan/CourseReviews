@@ -9,12 +9,9 @@ spline_chart_code = """
         inverted: false
     },
     title: {
-        text: 'Average Course Rating By Day (All Courses)'
-    },
-    subtitle: {
         text: ''
     },
-    xAxis: {
+     xAxis: {
         reversed: false,
         title: {
             enabled: true,
@@ -50,7 +47,7 @@ spline_chart_code = """
         }
     },
     series: [{
-        name: 'Average Daily Rating',
+        name: '',
         data: []
     }]
 }
