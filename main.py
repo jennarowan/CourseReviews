@@ -9,19 +9,22 @@ from justpy.chartcomponents import HighCharts
 
 def load_review_data():
 
-    # This function loads in the reviews.csv as a Pandas dataframe and creates additional columns and data frames that will be used in the creation of different graphs
-
-    global review_data
-    global day_average
+    # This function loads in the reviews.csv as a Pandas dataframe and creates additional columns that will be used in the creation of different graphs
 
     # Loads all review data, makes Timestamp column useable as dates
     review_data = pd.read_csv("reviews.csv", parse_dates = ["Timestamp"])
 
-    # Creates Day column with just the date portion of the Timestamp (all time of day data is dropped)
+    # Creates Day column with just the date portion of the Timestamp (all time of day data is dropped for this column)
     review_data["Day"] = review_data["Timestamp"].dt.date    
 
-    # Creates new data frame of just each day and the average review for that day (all courses)
+    return review_data
+
+def create_day_average():
+
+    # This function creates a new data frame of just each day and the average review for that day (all courses)
     day_average = review_data.groupby(["Day"]).mean()
+
+    return day_average
 
 def create_webpage():
 
@@ -50,5 +53,9 @@ def create_webpage():
 
     return webpage
 
-load_review_data()
+# Calls functions to load and manipulate review data
+review_data = load_review_data()
+day_average = create_day_average()
+
+# Calls website creator
 jp.justpy(create_webpage)
