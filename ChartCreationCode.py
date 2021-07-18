@@ -52,3 +52,57 @@ spline_chart_code = """
     }]
 }
 """
+
+area_spline_chart_code = """
+{
+    chart: {
+        type: 'areaspline'
+    },
+    title: {
+        text: ''
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        verticalAlign: 'top',
+        x: 150,
+        y: 100,
+        floating: true,
+        borderWidth: 1,
+        backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
+    },
+    xAxis: {
+        categories: [],
+        plotBands: [{ // visualize the weekend
+            from: 4.5,
+            to: 6.5,
+            color: 'rgba(68, 170, 213, .2)'
+        }]
+    },
+    yAxis: {
+        title: {
+            text: ''
+        }
+    },
+    tooltip: {
+        shared: true,
+        valueSuffix: ''
+    },
+    credits: {
+        enabled: false
+    },
+    plotOptions: {
+        areaspline: {
+            fillOpacity: 0.5
+        }
+    },
+    series: [{
+        name: '',
+        data: []
+    }, {
+        name: '',
+        data: []
+    }]
+}
+"""

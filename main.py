@@ -14,13 +14,9 @@ def load_review_data():
     # Loads all review data, makes Timestamp column useable as dates
     review_data = pd.read_csv("reviews.csv", parse_dates = ["Timestamp"])
 
-    # Creates Day column with just the date portion of the Timestamp (all time of day data is dropped for this column)
+    # Creates Day, Week, and Month columns using just the date portion of the Timestamp (all time of day data is dropped for these columns)
     review_data["Day"] = review_data["Timestamp"].dt.date
-
-    # Creates Week column so that averages can be shown by what week of the year the ratings cover
     review_data["Week"] = review_data["Timestamp"].dt.strftime("%Y-%U")
-
-    # Creates Month column for average ratings
     review_data["Month"] = review_data["Timestamp"].dt.strftime("%Y-%m")
 
     return review_data
@@ -46,6 +42,13 @@ def create_month_average():
 
     return month_average
 
+def create_month_average_by_course():
+
+    # This function creates a new data frame showing the monthly average rating for each course separately
+    month_average_by_course = review_data.groupby(["Month", "Course Name"])["Rating"].mean().unstack()
+
+    return month_average_by_course
+
 async def tooltip_formatter(self, msg):
 
     # This function customizes graph hover-over tooltips to be more useful
@@ -58,6 +61,8 @@ async def tooltip_formatter(self, msg):
 
 def build_spline_chart(webpage, time_frame, time_framely, pd_data):
 
+    # This function is used to build the various spline charts
+
     chart = HighCharts(a = webpage, options = ChartCreationCode.        spline_chart_code, classes = "q-pt-lg q-px-md")  
     chart.on('tooltip', tooltip_formatter)
     chart.options.title.text = "Average Course Rating By " + time_frame + " (All Courses)"  
@@ -66,6 +71,24 @@ def build_spline_chart(webpage, time_frame, time_framely, pd_data):
     chart.options.series[0].data = list(pd_data["Rating"])
 
     return chart
+
+# def build_area_spline_chart(webpage, time_frame, time_framely, pd_data):
+
+#     chart = HighCharts(a = webpage, options = ChartCreationCode.area_spline_chart_code, classes = "q-pt-lg q-px-md")
+#     chart.on('tooltip', tooltip_formatter)
+#     chart.options.title.text = "Average Course Rating By " + time_frame + " (All Courses)"  
+#     chart.options.xAxis.categories = list(pd_data.index)
+
+#     # Loops through each course and creates the data series for it
+#     x = 0
+
+#     for (course_name, course_data) in month_average_by_course.iteritems():
+
+#         chart.options.series[x].name = course_name
+#         chart.options.series[x].data = list(course_data)
+#         x += 1
+
+#     return chart
 
 def create_webpage():
 
@@ -88,7 +111,7 @@ def create_webpage():
         x += 1
 
     # Header for graphs covering timed ratings not broken down by course
-    h1 = jp.QDiv(a = webpage, text = "Average Ratings By Time Frame For All Courses Together", classes = "text-h4 text-center q-pt-md text-bold")
+    h2 = jp.QDiv(a = webpage, text = "Average Ratings By Time Frame For All Courses Together", classes = "text-h4 text-center q-pt-md text-bold")
 
     # Creates spline chart to show average rating per day for all courses
     spline_chart_day = build_spline_chart(webpage, "Day", "Daily", day_average)
@@ -99,6 +122,12 @@ def create_webpage():
     # Creates spline chart to show average rating per month for all courses
     spline_chart_month = build_spline_chart(webpage, "Month", "Monthly", month_average)
 
+    # Header for graph covering timed ratings broken down by course
+    h2 = jp.QDiv(a = webpage, text = "Average Ratings For Each Course Separately", classes = "text-h4 text-center q-pt-md text-bold")
+
+    # # Creates area spline chart to show monthly average rating for each course
+    # area_spline_chart = build_area_spline_chart(webpage, "Month", "Monthly", month_average_by_course)
+
     return webpage
 
 # Calls functions to load and manipulate course review data
@@ -106,6 +135,7 @@ review_data = load_review_data()
 day_average = create_day_average()
 week_average = create_week_average()
 month_average = create_month_average()
+month_average_by_course = create_month_average_by_course()
 
 # Calls website creator
 jp.justpy(create_webpage)
