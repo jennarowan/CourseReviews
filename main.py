@@ -78,14 +78,21 @@ def build_area_spline_chart(webpage, time_frame, time_framely, pd_data):
     chart.options.title.text = "Average Course Rating By " + time_frame + " For Each Course"  
     chart.options.xAxis.categories = list(pd_data.index)
 
-    # Loops through each course and creates the data series for it
-    x = 0
+    chart_data = [{"name": col_name, "data": [col_data for col_data in month_average_by_course[col_name]]} for col_name in month_average_by_course.columns]
 
-    for (course_name, course_data) in month_average_by_course.iteritems():
+    chart.options.series = chart_data
 
-        chart.options.series[x].name = course_name
-        chart.options.series[x].data = list(course_data)
-        x += 1
+    return chart
+
+def build_stream_graph_chart(webpage, time_frame, time_framely, pd_data):
+
+    chart = HighCharts(a = webpage, options = ChartCreationCode.stream_graph_code, classes = "q-pt-lg q-px-md")
+    chart.options.title.text = "Average Course Rating By " + time_frame + " For Each Course"  
+    chart.options.xAxis.categories = list(pd_data.index)
+
+    chart_data = [{"name": col_name, "data": [col_data for col_data in month_average_by_course[col_name]]} for col_name in month_average_by_course.columns]
+
+    chart.options.series = chart_data
 
     return chart
 
@@ -126,6 +133,9 @@ def create_webpage():
 
     # Creates area spline chart to show monthly average rating for each course
     area_spline_chart = build_area_spline_chart(webpage, "Month", "Monthly", month_average_by_course)
+
+    # Creates stream graph chart to show monthly average rating for each course
+    stream_graph_chart = build_stream_graph_chart(webpage, "Month", "Monthly", month_average_by_course)
 
     return webpage
 

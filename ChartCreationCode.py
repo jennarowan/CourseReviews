@@ -64,10 +64,10 @@ area_spline_chart_code = """
     legend: {
         layout: 'vertical',
         align: 'left',
-        verticalAlign: 'middle',
+        verticalAlign: 'top',
         x: 150,
         y: 100,
-        floating: true,
+        floating: false,
         borderWidth: 1,
         backgroundColor:
             '#FFFFFF'
@@ -93,31 +93,66 @@ area_spline_chart_code = """
         areaspline: {
             fillOpacity: 0.5
         }
+    }
+}
+"""
+
+stream_graph_code = """
+{
+
+    chart: {
+        type: 'streamgraph',
+        marginBottom: 30,
+        zoomType: 'x'
     },
-    series: [{
-        name: '',
-        data: []
-    }, {
-        name: '',
-        data: []
-    }, {
-        name: '',
-        data: []
-    }, {
-        name: '',
-        data: []
-    }, {
-        name: '',
-        data: []
-    }, {
-        name: '',
-        data: []
-    }, {
-        name: '',
-        data: []
-    }, {
-        name: '',
-        data: []
-    }]
+
+    title: {
+        floating: true,
+        align: 'left',
+        text: 'Average Course Rating By Month For Each Course'
+    },
+
+    xAxis: {
+        maxPadding: 0,
+        type: 'category',
+        crosshair: true,
+        categories: [],
+        labels: {
+            align: 'left',
+            reserveSpace: false,
+            rotation: 270
+        },
+        lineWidth: 0,
+        margin: 20,
+        tickWidth: 0
+    },
+
+    yAxis: {
+        visible: false,
+        startOnTick: false,
+        endOnTick: false
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                minFontSize: 5,
+                maxFontSize: 15,
+                style: {
+                    color: 'rgba(255,255,255,0.75)'
+                }
+            }
+        }
+    },
+
+    exporting: {
+        sourceWidth: 800,
+        sourceHeight: 600
+    }
+
 }
 """
