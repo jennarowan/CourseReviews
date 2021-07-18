@@ -46,6 +46,27 @@ def create_month_average():
 
     return month_average
 
+async def tooltip_formatter(self, msg):
+
+    # This function customizes graph hover-over tooltips to be more useful
+    tooltip_html = f"""
+    <div style="color: {msg.color};">{msg.series_name}</div>
+    <div>{msg.category}</div>
+    <div>{msg.y}</div>
+    """
+    return await self.tooltip_update(tooltip_html, msg.websocket)
+
+def build_spline_chart(webpage, time_frame, time_framely, pd_data):
+
+    chart = HighCharts(a = webpage, options = ChartCreationCode.        spline_chart_code, classes = "q-pt-lg q-px-md")  
+    chart.on('tooltip', tooltip_formatter)
+    chart.options.title.text = "Average Course Rating By " + time_frame + " (All Courses)"  
+    chart.options.xAxis.categories = list(pd_data.index)
+    chart.options.series[0].name = "Average " + time_framely + " Rating"
+    chart.options.series[0].data = list(pd_data["Rating"])
+
+    return chart
+
 def create_webpage():
 
     # This function actually creates and returns the webpage
@@ -70,27 +91,13 @@ def create_webpage():
     h1 = jp.QDiv(a = webpage, text = "Average Ratings By Time Frame For All Courses Together", classes = "text-h4 text-center q-pt-md text-bold")
 
     # Creates spline chart to show average rating per day for all courses
-    spline_chart_day = HighCharts(a = webpage, options = ChartCreationCode.spline_chart_code, classes = "q-pt-lg q-px-md")  
-    spline_chart_day.options.title.text = "Average Course Rating By Day (All Courses)"  
-    spline_chart_day.options.xAxis.categories = list(day_average.index)
-    spline_chart_day.options.series[0].name = "Average Daily Rating"
-    spline_chart_day.options.series[0].data = list(day_average["Rating"])
+    spline_chart_day = build_spline_chart(webpage, "Day", "Daily", day_average)
 
     # Creates spline chart to show average rating per week for all courses
-    spline_chart_week = HighCharts(a = webpage, options = ChartCreationCode.spline_chart_code, classes = "q-pt-lg q-px-md") 
-    spline_chart_week.options.title.text = "Average Course Rating By Week (All Courses)"   
-    spline_chart_week.options.xAxis.title.text = "Week"
-    spline_chart_week.options.xAxis.categories = list(week_average.index)
-    spline_chart_week.options.series[0].name = "Average Weekly Rating"
-    spline_chart_week.options.series[0].data = list(week_average["Rating"])
+    spline_chart_week = build_spline_chart(webpage, "Week", "Weekly", week_average)
 
     # Creates spline chart to show average rating per month for all courses
-    spline_chart_month = HighCharts(a = webpage, options = ChartCreationCode.spline_chart_code, classes = "q-pt-lg q-px-md") 
-    spline_chart_month.options.title.text = "Average Course Rating By Month (All Courses)"   
-    spline_chart_month.options.xAxis.title.text = "Month"
-    spline_chart_month.options.xAxis.categories = list(month_average.index)
-    spline_chart_month.options.series[0].name = "Average Monthly Rating"
-    spline_chart_month.options.series[0].data = list(month_average["Rating"])
+    spline_chart_month = build_spline_chart(webpage, "Month", "Monthly", month_average)
 
     return webpage
 
