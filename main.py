@@ -72,23 +72,22 @@ def build_spline_chart(webpage, time_frame, time_framely, pd_data):
 
     return chart
 
-# def build_area_spline_chart(webpage, time_frame, time_framely, pd_data):
+def build_area_spline_chart(webpage, time_frame, time_framely, pd_data):
 
-#     chart = HighCharts(a = webpage, options = ChartCreationCode.area_spline_chart_code, classes = "q-pt-lg q-px-md")
-#     chart.on('tooltip', tooltip_formatter)
-#     chart.options.title.text = "Average Course Rating By " + time_frame + " (All Courses)"  
-#     chart.options.xAxis.categories = list(pd_data.index)
+    chart = HighCharts(a = webpage, options = ChartCreationCode.area_spline_chart_code, classes = "q-pt-lg q-px-md")
+    chart.options.title.text = "Average Course Rating By " + time_frame + " For Each Course"  
+    chart.options.xAxis.categories = list(pd_data.index)
 
-#     # Loops through each course and creates the data series for it
-#     x = 0
+    # Loops through each course and creates the data series for it
+    x = 0
 
-#     for (course_name, course_data) in month_average_by_course.iteritems():
+    for (course_name, course_data) in month_average_by_course.iteritems():
 
-#         chart.options.series[x].name = course_name
-#         chart.options.series[x].data = list(course_data)
-#         x += 1
+        chart.options.series[x].name = course_name
+        chart.options.series[x].data = list(course_data)
+        x += 1
 
-#     return chart
+    return chart
 
 def create_webpage():
 
@@ -125,8 +124,8 @@ def create_webpage():
     # Header for graph covering timed ratings broken down by course
     h2 = jp.QDiv(a = webpage, text = "Average Ratings For Each Course Separately", classes = "text-h4 text-center q-pt-md text-bold")
 
-    # # Creates area spline chart to show monthly average rating for each course
-    # area_spline_chart = build_area_spline_chart(webpage, "Month", "Monthly", month_average_by_course)
+    # Creates area spline chart to show monthly average rating for each course
+    area_spline_chart = build_area_spline_chart(webpage, "Month", "Monthly", month_average_by_course)
 
     return webpage
 

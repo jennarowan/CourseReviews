@@ -56,7 +56,7 @@ spline_chart_code = """
 area_spline_chart_code = """
 {
     chart: {
-        type: 'areaspline'
+        type: 'spline'
     },
     title: {
         text: ''
@@ -64,25 +64,22 @@ area_spline_chart_code = """
     legend: {
         layout: 'vertical',
         align: 'left',
-        verticalAlign: 'top',
+        verticalAlign: 'middle',
         x: 150,
         y: 100,
         floating: true,
         borderWidth: 1,
         backgroundColor:
-            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
+            '#FFFFFF'
     },
     xAxis: {
-        categories: [],
-        plotBands: [{ // visualize the weekend
-            from: 4.5,
-            to: 6.5,
-            color: 'rgba(68, 170, 213, .2)'
-        }]
+        title: {
+            text: "Month"
+        }
     },
     yAxis: {
         title: {
-            text: ''
+            text: 'Average Rating'
         }
     },
     tooltip: {
@@ -98,6 +95,24 @@ area_spline_chart_code = """
         }
     },
     series: [{
+        name: '',
+        data: []
+    }, {
+        name: '',
+        data: []
+    }, {
+        name: '',
+        data: []
+    }, {
+        name: '',
+        data: []
+    }, {
+        name: '',
+        data: []
+    }, {
+        name: '',
+        data: []
+    }, {
         name: '',
         data: []
     }, {
