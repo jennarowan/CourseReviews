@@ -4,4 +4,4 @@ import pandas as pd
 
 data = pd.read_csv("reviews.csv")
 
-print(data)
+print(data["Course Name"].unique())

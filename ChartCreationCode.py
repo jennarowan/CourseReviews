@@ -9,7 +9,7 @@ spline_chart_code = """
         inverted: false
     },
     title: {
-        text: 'Average Course Rating By Day'
+        text: 'Average Course Rating By Day (All Courses)'
     },
     subtitle: {
         text: ''
