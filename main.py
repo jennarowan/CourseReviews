@@ -56,6 +56,16 @@ def create_month_count_by_course():
 
     return month_count_by_course
 
+def create_day_of_week_average():
+
+    # This function creates a new data frame showing average rating by day of week
+    review_data["Day of Week"] = review_data["Timestamp"].dt.strftime("%A")
+    review_data['Day Number'] = review_data['Timestamp'].dt.strftime('%w')
+    day_of_week_average = review_data.groupby(['Day of Week', 'Day Number']).mean()
+    day_of_week_average = day_of_week_average.sort_values('Day Number')
+
+    return day_of_week_average
+
 def build__chart(webpage, chart_object, chart_title, pd_data):
 
     # This function builds each chart, having been passed what chart code to grab from the ChartCreationCode file, as well as the chart title and which pandas data frame to use
@@ -110,6 +120,10 @@ def create_webpage():
     # Creates stream graph chart to show count of monthly rates for each course
     stream_graph_chart = build__chart(webpage, ChartCreationCode.stream_graph_code, "Count of Ratings By Month For Each Course", month_count_by_course)
 
+    # Header for section showing ratings averaged by day of week
+    h2 = jp.QDiv(a = webpage, text = "Which day of the week are students happiest?", classes = "text-h4 text-center q-pt-md text-bold")
+    spline_chart_day_of_week = build__chart(webpage, ChartCreationCode.spline_chart_code, "Average Rating Per Day Of Week", day_of_week_average)
+
     return webpage
 
 # Calls functions to load and manipulate course review data
@@ -119,6 +133,7 @@ week_average = create_week_average()
 month_average = create_month_average()
 month_average_by_course = create_month_average_by_course()
 month_count_by_course = create_month_count_by_course()
+day_of_week_average = create_day_of_week_average()
 
 # Calls website creator
 jp.justpy(create_webpage)
