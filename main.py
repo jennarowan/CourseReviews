@@ -103,6 +103,22 @@ def build_stream_graph_chart(webpage, time_frame, time_framely, pd_data):
 
     return chart
 
+def build__chart(webpage, chart_object, use_custom_tooltips, time_frame, time_framely, pd_data):
+
+    chart = HighCharts(a = webpage, options = chart_object, classes = "q-pt-lg q-px-md")
+    chart.options.title.text = "Count Of Ratings By " + time_frame + " For Each Course"  
+    chart.options.xAxis.categories = list(pd_data.index)
+
+    chart_data = [{"name": col_name, "data": [col_data for col_data in pd_data[col_name]]} for col_name in pd_data.columns]
+
+    chart.options.series = chart_data
+
+    if use_custom_tooltips:
+
+        chart.on('tooltip', tooltip_formatter)
+
+    return chart
+
 def create_webpage():
 
     # This function actually creates and returns the webpage
@@ -142,7 +158,7 @@ def create_webpage():
     area_spline_chart = build_area_spline_chart(webpage, "Month", "Monthly", month_average_by_course)
 
     # Creates stream graph chart to show count of monthly rates for each course
-    stream_graph_chart = build_stream_graph_chart(webpage, "Month", "Monthly", month_count_by_course)
+    stream_graph_chart = build__chart(webpage, ChartCreationCode.stream_graph_code, False, "Month", "Monthly", month_count_by_course)
 
     return webpage
 
