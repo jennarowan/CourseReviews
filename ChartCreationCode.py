@@ -37,7 +37,7 @@ spline_chart_code = """
     },
     tooltip: {
         headerFormat: '<b>{series.name}</b><br/>',
-        pointFormat: '{msg.x}: {point.y}'
+        pointFormat: '{point.x}: {point.y}'
     },
     plotOptions: {
         spline: {
