@@ -49,6 +49,13 @@ def create_month_average_by_course():
 
     return month_average_by_course
 
+def create_month_count_by_course():
+
+    # This function creates a new data frame showing how many ratings each course received in each month
+    month_count_by_course = review_data.groupby(["Month", "Course Name"])["Rating"].count().unstack()
+
+    return month_count_by_course
+
 async def tooltip_formatter(self, msg):
 
     # This function customizes graph hover-over tooltips to be more useful
@@ -87,10 +94,10 @@ def build_area_spline_chart(webpage, time_frame, time_framely, pd_data):
 def build_stream_graph_chart(webpage, time_frame, time_framely, pd_data):
 
     chart = HighCharts(a = webpage, options = ChartCreationCode.stream_graph_code, classes = "q-pt-lg q-px-md")
-    chart.options.title.text = "Average Course Rating By " + time_frame + " For Each Course"  
+    chart.options.title.text = "Count Of Ratings By " + time_frame + " For Each Course"  
     chart.options.xAxis.categories = list(pd_data.index)
 
-    chart_data = [{"name": col_name, "data": [col_data for col_data in month_average_by_course[col_name]]} for col_name in month_average_by_course.columns]
+    chart_data = [{"name": col_name, "data": [col_data for col_data in pd_data[col_name]]} for col_name in pd_data.columns]
 
     chart.options.series = chart_data
 
@@ -129,13 +136,13 @@ def create_webpage():
     spline_chart_month = build_spline_chart(webpage, "Month", "Monthly", month_average)
 
     # Header for graph covering timed ratings broken down by course
-    h2 = jp.QDiv(a = webpage, text = "Average Ratings For Each Course Separately", classes = "text-h4 text-center q-pt-md text-bold")
+    h2 = jp.QDiv(a = webpage, text = "Ratings For Each Course Separately", classes = "text-h4 text-center q-pt-md text-bold")
 
     # Creates area spline chart to show monthly average rating for each course
     area_spline_chart = build_area_spline_chart(webpage, "Month", "Monthly", month_average_by_course)
 
-    # Creates stream graph chart to show monthly average rating for each course
-    stream_graph_chart = build_stream_graph_chart(webpage, "Month", "Monthly", month_average_by_course)
+    # Creates stream graph chart to show count of monthly rates for each course
+    stream_graph_chart = build_stream_graph_chart(webpage, "Month", "Monthly", month_count_by_course)
 
     return webpage
 
@@ -145,6 +152,7 @@ day_average = create_day_average()
 week_average = create_week_average()
 month_average = create_month_average()
 month_average_by_course = create_month_average_by_course()
+month_count_by_course = create_month_count_by_course()
 
 # Calls website creator
 jp.justpy(create_webpage)
