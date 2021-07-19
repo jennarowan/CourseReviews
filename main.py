@@ -56,22 +56,12 @@ def create_month_count_by_course():
 
     return month_count_by_course
 
-async def tooltip_formatter(self, msg):
-
-    # This function customizes graph hover-over tooltips to be more useful
-    tooltip_html = f"""
-    <div style="color: {msg.color};">{msg.series_name}</div>
-    <div>{msg.category}</div>
-    <div>{msg.y}</div>
-    """
-    return await self.tooltip_update(tooltip_html, msg.websocket)
-
 def build_spline_chart(webpage, time_frame, time_framely, pd_data):
 
     # This function is used to build the various spline charts
 
     chart = HighCharts(a = webpage, options = ChartCreationCode.        spline_chart_code, classes = "q-pt-lg q-px-md")  
-    chart.on('tooltip', tooltip_formatter)
+    #chart.on('tooltip', tooltip_formatter)
     chart.options.title.text = "Average Course Rating By " + time_frame + " (All Courses)"  
     chart.options.xAxis.categories = list(pd_data.index)
     chart.options.series[0].name = "Average " + time_framely + " Rating"
@@ -79,43 +69,15 @@ def build_spline_chart(webpage, time_frame, time_framely, pd_data):
 
     return chart
 
-def build_area_spline_chart(webpage, time_frame, time_framely, pd_data):
-
-    chart = HighCharts(a = webpage, options = ChartCreationCode.area_spline_chart_code, classes = "q-pt-lg q-px-md")
-    chart.options.title.text = "Average Course Rating By " + time_frame + " For Each Course"  
-    chart.options.xAxis.categories = list(pd_data.index)
-
-    chart_data = [{"name": col_name, "data": [col_data for col_data in month_average_by_course[col_name]]} for col_name in month_average_by_course.columns]
-
-    chart.options.series = chart_data
-
-    return chart
-
-def build_stream_graph_chart(webpage, time_frame, time_framely, pd_data):
-
-    chart = HighCharts(a = webpage, options = ChartCreationCode.stream_graph_code, classes = "q-pt-lg q-px-md")
-    chart.options.title.text = "Count Of Ratings By " + time_frame + " For Each Course"  
-    chart.options.xAxis.categories = list(pd_data.index)
-
-    chart_data = [{"name": col_name, "data": [col_data for col_data in pd_data[col_name]]} for col_name in pd_data.columns]
-
-    chart.options.series = chart_data
-
-    return chart
-
-def build__chart(webpage, chart_object, use_custom_tooltips, time_frame, time_framely, pd_data):
+def build__chart(webpage, chart_object, chart_title, pd_data):
 
     chart = HighCharts(a = webpage, options = chart_object, classes = "q-pt-lg q-px-md")
-    chart.options.title.text = "Count Of Ratings By " + time_frame + " For Each Course"  
+    chart.options.title.text = chart_title
     chart.options.xAxis.categories = list(pd_data.index)
 
     chart_data = [{"name": col_name, "data": [col_data for col_data in pd_data[col_name]]} for col_name in pd_data.columns]
 
     chart.options.series = chart_data
-
-    if use_custom_tooltips:
-
-        chart.on('tooltip', tooltip_formatter)
 
     return chart
 
@@ -155,10 +117,10 @@ def create_webpage():
     h2 = jp.QDiv(a = webpage, text = "Ratings For Each Course Separately", classes = "text-h4 text-center q-pt-md text-bold")
 
     # Creates area spline chart to show monthly average rating for each course
-    area_spline_chart = build_area_spline_chart(webpage, "Month", "Monthly", month_average_by_course)
+    area_spline_chart = build__chart(webpage, ChartCreationCode.area_spline_chart_code, "Average of Ratings By Month For Each Course", month_average_by_course)
 
     # Creates stream graph chart to show count of monthly rates for each course
-    stream_graph_chart = build__chart(webpage, ChartCreationCode.stream_graph_code, False, "Month", "Monthly", month_count_by_course)
+    stream_graph_chart = build__chart(webpage, ChartCreationCode.stream_graph_code, "Count of Ratings By Month For Each Course", month_count_by_course)
 
     return webpage
 
