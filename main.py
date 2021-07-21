@@ -66,6 +66,13 @@ def create_day_of_week_average():
 
     return day_of_week_average
 
+def create_count_per_course():
+
+    # This function creates a new data frame counting how many reviews each course has
+    count_per_course = review_data.groupby(["Course Name"])["Rating"].count()
+
+    return count_per_course
+
 def build__chart(webpage, chart_object, chart_title, pd_data):
 
     # This function builds each chart, having been passed what chart code to grab from the ChartCreationCode file, as well as the chart title and which pandas data frame to use
@@ -78,6 +85,17 @@ def build__chart(webpage, chart_object, chart_title, pd_data):
     chart.options.series = chart_data
 
     return chart
+
+def build_pie_chart(webpage, chart_title, pd_data):
+
+    # This function builds a pie chart.  It is separate from the other chart creation code due to the different method in which the HighCharts library handles data points within the chart code.
+    chart = HighCharts(a = webpage, options = ChartCreationCode.pie_chart_code, classes = "q-pt-lg q-px-md")
+
+    chart.options.title.text = chart_title
+
+    chart_data = [{"name": class_name, "y": rating_count} for class_name, rating_count in zip(pd_data.index, pd_data)]
+
+    chart.options.series[0].data = chart_data
 
 def create_webpage():
 
@@ -122,7 +140,15 @@ def create_webpage():
 
     # Header for section showing ratings averaged by day of week
     h2 = jp.QDiv(a = webpage, text = "Which day of the week are students happiest?", classes = "text-h4 text-center q-pt-md text-bold")
+
+    # Creates spline chart to show average rating per day of week
     spline_chart_day_of_week = build__chart(webpage, ChartCreationCode.spline_chart_code, "Average Rating Per Day Of Week", day_of_week_average)
+
+    # Header for section showing how many ratings each course got
+    h2 = jp.QDiv(a = webpage, text = "How many students gave ratings to each course?", classes = "text-h4 text-center q-pt-md text-bold")
+
+    # Creates pie chart to show ratio of reviews to total reviews for each course
+    pie_chart_course_count = build_pie_chart(webpage, "Breakdown of Reviews Per Course", count_per_course)
 
     return webpage
 
@@ -134,6 +160,7 @@ month_average = create_month_average()
 month_average_by_course = create_month_average_by_course()
 month_count_by_course = create_month_count_by_course()
 day_of_week_average = create_day_of_week_average()
+count_per_course = create_count_per_course()
 
 # Calls website creator
 jp.justpy(create_webpage)
